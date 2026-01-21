@@ -1,0 +1,75 @@
+Integrating real-time satellite data transforms the dashboard from a static report into a living Regenerative Monitor. We use the Sentinel-2 multi-spectral bands—specifically B4 (Red) and B8 (Near-Infrared)—to calculate the Normalized Difference Vegetation Index (NDVI).
+
+NDVI is a proxy for chlorophyll health; healthy plants reflect more NIR and absorb more Red light.
+
+1. The Spectral Logic: Chlorophyll Health Index
+
+We calculate the "Health Pulse" of a zone using the standard NDVI formula:
+
+
+
+
+$$NDVI = \frac{B8 (NIR) - B4 (Red)}{B8 (NIR) + B4 (Red)}$$
+
+0.8 - 1.0: Dense, healthy hemp canopy (High Chlorophyll).
+
+0.3 - 0.7: Moderate growth or maturation phase.
+
+< 0.2: Stressed vegetation, soil, or water.
+
+2. Python Implementation: Sentinel-2 Overlay
+
+To avoid heavy local processing, we use the Sentinel Hub API (or the Copernicus Data Space Ecosystem) to request a processed NDVI tile for our specific coordinates.
+
+Python
+
+
+
+import streamlit as st
+import folium
+from streamlit_folium import st_folium
+
+# --- CONFIGURATION ---
+# In production, use your Sentinel Hub Instance ID
+SENTINEL_HUB_WMS_URL = "https://services.sentinel-hub.com/ogc/wms/YOUR_INSTANCE_ID"
+
+def add_satellite_overlay(m, lat, lon):
+    """Adds a real-time NDVI tile layer from Sentinel-2."""
+    # Define the NDVI layer from Sentinel Hub OGC services
+    folium.WmsTileLayer(
+        url=SENTINEL_HUB_WMS_URL,
+        layers="NDVI",  # Predetermined layer in Sentinel Hub
+        name="Chlorophyll Health (NDVI)",
+        attr="Sentinel Hub / Copernicus",
+        fmt="image/png",
+        transparent=True,
+        overlay=True,
+        control=True
+    ).add_to(m)
+
+# --- DASHBOARD MAP SECTION ---
+st.subheader("🛰️ Real-Time Chlorophyll Analysis")
+st.info("Overlaying Sentinel-2 Multi-Spectral data to verify hemp health.")
+
+# Create the map (centered on a known hemp hub like Antwerp)
+m = folium.Map(location=[51.24, 4.42], zoom_start=13, tiles="CartoDB positron")
+
+# Add the live satellite layer
+add_satellite_overlay(m, 51.24, 4.42)
+
+# Render
+st_folium(m, width=1100, height=500)
+
+3. The "Biological Audit" Workflow
+
+By integrating this data, the Global Hemp Ledger achieves Multi-Factor Verification:
+
+Ground Truth: Eco-Guardian sensors report soil moisture and local $CO_2$.
+
+Sky Truth: Sentinel-2 verifies the actual greening of the field (chlorophyll health).
+
+The Imprint: The Nexus correlates these two data points. If they match, the $CO2e$ tokens are automatically "Validated" on the Ledger.
+
+4. Advanced Insight: The Red-Edge Advantage
+
+For even higher precision, we can leverage Sentinel-2's unique Red-Edge bands (B5, B6, B7). These are specifically sensitive to chlorophyll concentration and allow us to detect plant stress 48-72 hours before it's visible to the human eye.
