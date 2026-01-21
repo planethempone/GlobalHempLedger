@@ -1,0 +1,83 @@
+To visualize the global impact of the Green Renaissance, we integrate a geospatial layer into the dashboard. This "Impact Map" provides a real-time, interactive look at the exact coordinates of our sequestration zones, allowing partners to "fly" to the fields where their carbon was captured.
+
+We use Folium for its rich mapping capabilities and Streamlit-Folium to embed it seamlessly into our Python dashboard.
+
+Python Script: ghl_impact_map.py
+
+Python
+
+
+
+import streamlit as st
+import pandas as pd
+import folium
+from streamlit_folium import st_folium
+import json
+
+# --- MOCK DATA (In production, this is fetched from GHL/IPFS) ---
+sequestration_data = [
+    {"zone": "Antwerp North", "lat": 51.24, "lon": 4.42, "tons": 450, "status": "Active"},
+    {"zone": "Ghent Bio-Hub", "lat": 51.05, "lon": 3.73, "tons": 1200, "status": "Harvested"},
+    {"zone": "Ukraine Ma'Ryzhany", "lat": 50.25, "lon": 28.66, "tons": 8500, "status": "Processing"},
+    {"zone": "French Fiber-Plains", "lat": 48.85, "lon": 2.35, "tons": 3200, "status": "Active"}
+]
+
+def create_impact_map(data):
+    # Initialize map at a central European point
+    m = folium.Map(location=[50.0, 10.0], zoom_start=4, tiles="CartoDB positron")
+    
+    for zone in data:
+        # Determine marker color based on status
+        color = "green" if zone["status"] == "Active" else "blue" if zone["status"] == "Processing" else "gray"
+        
+        # Create a detailed popup with Equity Index stats
+        popup_html = f"""
+            <div style="font-family: Arial; width: 200px;">
+                <h4 style="margin-bottom:5px;">{zone['zone']}</h4>
+                <p><b>Sequestration:</b> {zone['tons']} Tons CO2e</p>
+                <p><b>Status:</b> {zone['status']}</p>
+                <hr>
+                <a href="https://explorer.planethemp.one" target="_blank">View on Ledger</a>
+            </div>
+        """
+        
+        folium.CircleMarker(
+            location=[zone["lat"], zone["lon"]],
+            radius=zone["tons"] / 200, # Scale circle by sequestration volume
+            popup=folium.Popup(popup_html, max_width=250),
+            color=color,
+            fill=True,
+            fill_opacity=0.6
+        ).add_to(m)
+        
+    return m
+
+# --- DASHBOARD UI ---
+st.title("🌍 Global Impact Map")
+st.markdown("Real-time geographic distribution of Planet Hemp sequestration zones.")
+
+# Render the Map
+map_obj = create_impact_map(sequestration_data)
+st_folium(map_obj, width=1100, height=600)
+
+# Geographic Breakdown Table
+st.subheader("Regional Performance")
+st.table(pd.DataFrame(sequestration_data))
+
+The "Geographic Imprint" Logic
+
+Visual Weight: The size of the CircleMarker is dynamically scaled by the amount of $CO_2$ sequestered, allowing for an instant visual audit of our highest-impact regions.
+
+Status Coloring: Active (Growing) zones are green, signaling active sequestration, while Harvested zones turn gray, indicating the biomass has moved to the Industrial Forge.
+
+The Metadata Bridge: Every marker is a portal. Clicking the popup provides a direct link back to the Global Hemp Ledger, closing the loop between physical soil and digital proof.
+
+Implementation Note
+
+To run this expansion, you will need to add folium and streamlit-folium to your environment:
+
+Bash
+
+
+
+pip install folium streamlit-folium
