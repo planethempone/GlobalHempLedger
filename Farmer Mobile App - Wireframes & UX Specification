@@ -1,0 +1,2134 @@
+Global Hemp Ledger (GHL)
+Farmer Mobile App - Wireframes & UX Specification
+
+Version 1.0 | February 2026
+Document Type: Product Requirements & Design Specification
+
+---
+
+Table of Contents
+
+1. App Overview
+2. User Personas
+3. Design Principles
+4. Information Architecture
+5. Screen-by-Screen Wireframes
+6. User Flows
+7. Component Library
+8. SMS Fallback System
+9. Accessibility Guidelines
+10. Localization Notes
+11. Technical Requirements
+12. Appendix: ASCII Wireframes
+
+---
+
+1. App Overview
+
+Purpose
+
+The GHL Farmer App enables hemp farmers to:
+- Enroll their plots in the carbon credit program
+- Monitor carbon capture progress in real-time
+- Track earnings from verified carbon credits
+- Manage sensors and receive alerts
+- Get paid directly to their bank account
+
+Key Principle: Hide the Crypto
+
+The app abstracts all blockchain complexity. Farmers see:
+- Euros, not tokens
+- "Verified carbon" not "minted credits"
+- "Earnings" not "wallet balance"
+- "Bank transfer" not "fiat offramp"
+
+The blockchain is infrastructure, invisible to the user.
+
+Target Platforms
+
+- iOS 14+ (iPhone 8 and newer)
+- Android 10+ (API level 29)
+- React Native for cross-platform development
+- Offline-first architecture with background sync
+
+---
+
+2. User Personas
+
+Persona 1: Jean-Pierre (Primary)
+
+Profile:
+- Age: 58
+- Location: Aube, France (La Chanvriere member)
+- Farm: 75 hectares, hemp for 12 years
+- Tech comfort: Low - uses smartphone for calls, WhatsApp, weather
+- Language: French
+
+Goals:
+- Earn extra income with minimal effort
+- Understand what's happening on his land
+- Not deal with complicated technology
+
+Frustrations:
+- Small text, complex interfaces
+- Apps that don't work in rural areas
+- Too many steps to do simple things
+
+Quote: "I grow hemp. I don't need to understand carbon markets to get paid for it."
+
+Persona 2: Anna (Secondary)
+
+Profile:
+- Age: 34
+- Location: Brandenburg, Germany
+- Farm: 120 hectares, new to hemp (2 years)
+- Tech comfort: Medium - manages farm accounting on tablet
+- Language: German, English
+
+Goals:
+- Track farm performance with data
+- Maximize revenue from carbon program
+- Understand verification process
+
+Frustrations:
+- Lack of transparency in how credits are calculated
+- Waiting for payments without status updates
+
+Quote: "Show me the data and when I get paid."
+
+Persona 3: Hans (Tertiary - No Smartphone)
+
+Profile:
+- Age: 67
+- Location: Zeeland, Netherlands
+- Farm: 45 hectares, hemp cooperative member
+- Tech comfort: Very low - feature phone only
+- Language: Dutch
+
+Goals:
+- Participate without changing behavior
+- Get notifications about important events
+- Have someone to call if there's a problem
+
+Frustrations:
+- Being excluded from digital programs
+- Missing important information
+
+Quote: "Just tell me when there's money and if something's wrong."
+
+---
+
+3. Design Principles
+
+3.1 Simplicity First
+
+- One primary action per screen
+- Maximum 3 taps to any destination
+- No jargon - farm language, not tech language
+- Progressive disclosure - details on demand
+
+3.2 Offline-First Architecture
+
+- All data cached locally
+- Actions queued when offline
+- Clear offline indicator
+- Graceful degradation
+- Background sync when connected
+
+3.3 Accessibility by Default
+
+- Minimum 48x48dp touch targets
+- WCAG AA contrast ratios
+- Large text support (16sp minimum)
+- Screen reader compatibility
+- Reduced motion option
+
+3.4 Trust Through Transparency
+
+- Always show data freshness
+- Explain calculations simply
+- Provide support access everywhere
+- No hidden states or mystery
+
+---
+
+4. Information Architecture
+
+4.1 Screen Hierarchy
+
+```
+App Root
+|
++-- Onboarding (first-time only)
+|   +-- Welcome
+|   +-- Phone Verification
+|   +-- Farmer Profile
+|   +-- Plot Registration
+|   +-- Sensor Pairing
+|   +-- Setup Complete
+|
++-- Main App (tab navigation)
+|   |
+|   +-- Home (default)
+|   |   +-- Earnings Summary
+|   |   +-- Plot Cards
+|   |   +-- Quick Actions
+|   |
+|   +-- Plots
+|   |   +-- Plot List
+|   |   +-- Plot Detail
+|   |   |   +-- Sensor Data
+|   |   |   +-- Carbon Progress
+|   |   |   +-- Activity Timeline
+|   |   +-- Add Plot
+|   |   +-- Edit Plot
+|   |
+|   +-- Earnings
+|   |   +-- Summary
+|   |   +-- Transaction History
+|   |   +-- Transaction Detail
+|   |   +-- Payout Settings
+|   |
+|   +-- Settings
+|       +-- Profile
+|       +-- Notifications
+|       +-- Language
+|       +-- Help & Support
+|       +-- About
+|       +-- Logout
+|
++-- Overlays/Modals
+|   +-- Verification Status
+|   +-- Sensor Troubleshooting
+|   +-- Alert Details
+|   +-- Confirmation Dialogs
+|
++-- Error States
+    +-- Offline Mode
+    +-- Sensor Error
+    +-- Sync Error
+    +-- Network Error
+```
+
+4.2 Navigation Model
+
+Primary Navigation: Bottom tab bar (4 tabs)
+- Home (house icon)
+- Plots (plant/field icon)
+- Earnings (euro/currency icon)
+- Settings (gear icon)
+
+Secondary Navigation: In-screen
+- Back arrows for drilldown
+- Pull-to-refresh for data update
+- Floating action buttons for primary actions
+
+---
+
+5. Screen-by-Screen Wireframes
+
+5.1 Onboarding Flow
+
+Screen 1.1: Welcome
+
+Purpose: First impression, set expectations, language selection
+
+Layout:
+```
++----------------------------------+
+|           [Status Bar]           |
++----------------------------------+
+|                                  |
+|                                  |
+|         [GHL Logo - 80px]        |
+|                                  |
+|    "Earn from your hemp's        |
+|     carbon capture"              |
+|                                  |
+|    [Illustration: Hemp field     |
+|     with subtle CO2 arrows]      |
+|                                  |
+|                                  |
++----------------------------------+
+|   [====== Get Started ======]    |  <- Primary Button
+|                                  |
+|   [Language: Francais    v]      |  <- Dropdown
+|                                  |
+|   "Already have account? Log in" |  <- Text Link
++----------------------------------+
+```
+
+Components:
+- Logo: 80x80px centered
+- Tagline: 24sp, centered, primary color
+- Illustration: 200x150px, simple line art
+- Primary button: Full width minus 32px padding, 56px height
+- Language dropdown: 48px height, right-aligned flag icon
+
+Copy (French):
+- Tagline: "Gagnez de l'argent grace au carbone capte par votre chanvre"
+- Button: "Commencer"
+- Login link: "Deja un compte ? Se connecter"
+
+Interactions:
+- Tap "Get Started" -> Navigate to Phone Verification
+- Tap language dropdown -> Show language picker modal
+- Tap login link -> Navigate to login flow
+
+---
+
+Screen 1.2: Phone Verification
+
+Purpose: Authenticate user via SMS, no passwords
+
+Layout (Step 1 - Enter Phone):
+```
++----------------------------------+
+|  [<]        Phone Number         |
++----------------------------------+
+|                                  |
+|   Step 1 of 5                    |
+|   [====-----------------]        |
+|                                  |
+|   "Enter your phone number"      |
+|                                  |
+|   We'll send you a code to       |
+|   verify it's you.               |
+|                                  |
+|   +----+ +--------------------+  |
+|   |+33 | |                    |  |
+|   |[v] | | 6 12 34 56 78      |  |
+|   +----+ +--------------------+  |
+|                                  |
+|                                  |
++----------------------------------+
+|   [====== Send Code ======]      |
+|                                  |
+|   "By continuing, you agree to   |
+|    our Terms and Privacy Policy" |
++----------------------------------+
+```
+
+Layout (Step 2 - Enter Code):
+```
++----------------------------------+
+|  [<]      Verification           |
++----------------------------------+
+|                                  |
+|   Step 1 of 5                    |
+|   [====-----------------]        |
+|                                  |
+|   "Enter the 6-digit code"       |
+|                                  |
+|   Sent to +33 6 12 34 56 78      |
+|                                  |
+|   +--+ +--+ +--+ +--+ +--+ +--+  |
+|   |  | |  | |  | |  | |  | |  |  |
+|   +--+ +--+ +--+ +--+ +--+ +--+  |
+|                                  |
+|   Resend code (54s)              |
+|                                  |
++----------------------------------+
+|   [====== Verify ======]         |
+|                                  |
+|   "Didn't receive code?"         |
+|    Call support: +33 X XX XX XX  |
++----------------------------------+
+```
+
+Components:
+- Progress bar: 4px height, 20% filled
+- Country code picker: 72px width, flag + code
+- Phone input: Large numbers, 24sp, auto-format
+- Code inputs: 6 separate boxes, 48x56px each
+- Auto-advance on digit entry
+
+Validation:
+- Phone: Valid format for selected country
+- Code: 6 digits, auto-submit when complete
+- Rate limit: 3 attempts, then 60s cooldown
+
+Error States:
+- Invalid code: Shake animation, red border, "Code incorrect. Try again."
+- Too many attempts: "Too many attempts. Try again in X minutes."
+- Network error: "Can't send code. Check your connection."
+
+---
+
+Screen 1.3: Farmer Profile
+
+Purpose: Collect essential farmer information
+
+Layout:
+```
++----------------------------------+
+|  [<]      Your Profile           |
++----------------------------------+
+|                                  |
+|   Step 2 of 5                    |
+|   [========-----------]          |
+|                                  |
+|   [Camera icon - Add Photo]      |  <- Optional
+|                                  |
+|   Your Name                      |
+|   +----------------------------+ |
+|   | Jean-Pierre Dubois         | |
+|   +----------------------------+ |
+|                                  |
+|   Farm Name                      |
+|   +----------------------------+ |
+|   | Ferme des Trois Chenes     | |
+|   +----------------------------+ |
+|                                  |
+|   Country                        |
+|   +----------------------------+ |
+|   | France                  [v]| |
+|   +----------------------------+ |
+|                                  |
+|   Region                         |
+|   +----------------------------+ |
+|   | Aube                    [v]| |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+|   [====== Continue ======]       |
++----------------------------------+
+```
+
+Components:
+- Photo picker: 80x80px circle, optional, camera icon
+- Text inputs: 56px height, 16sp text
+- Dropdowns: 56px height, searchable
+
+Validation:
+- Name: Required, 2-50 characters
+- Farm name: Required, 2-100 characters
+- Country: Required, from supported list
+- Region: Required after country selected
+
+Data Persistence:
+- Save locally on each field blur
+- Resume if app closes mid-onboarding
+
+---
+
+Screen 1.4: Bank Details
+
+Purpose: Set up payout destination
+
+Layout:
+```
++----------------------------------+
+|  [<]      Bank Details           |
++----------------------------------+
+|                                  |
+|   Step 3 of 5                    |
+|   [============-------]          |
+|                                  |
+|   "Where should we send          |
+|    your earnings?"               |
+|                                  |
+|   [i] Your bank details are      |
+|       encrypted and secure.      |
+|                                  |
+|   Account Holder Name            |
+|   +----------------------------+ |
+|   | Jean-Pierre Dubois         | |
+|   +----------------------------+ |
+|                                  |
+|   IBAN                           |
+|   +----------------------------+ |
+|   | FR76 3000 4000 0500 0000   | |
+|   | 1234 567                    | |
+|   +----------------------------+ |
+|                                  |
+|   BIC/SWIFT (optional)           |
+|   +----------------------------+ |
+|   | BNPAFRPP                   | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+|   [====== Continue ======]       |
+|                                  |
+|   "Add bank details later"       |
++----------------------------------+
+```
+
+Components:
+- Info banner: Light blue background, lock icon
+- IBAN input: Auto-format with spaces, uppercase
+- Validation: Real-time IBAN checksum validation
+
+Validation:
+- IBAN: Valid format and checksum for country
+- BIC: Valid format if provided
+- Allow skip: Can add later in Settings
+
+Security:
+- Data encrypted in transit and at rest
+- Masked display after entry (FR76    4567)
+
+---
+
+Screen 1.5: Plot Registration
+
+Purpose: Add first hemp plot
+
+Layout:
+```
++----------------------------------+
+|  [<]      Add Your Plot          |
++----------------------------------+
+|                                  |
+|   Step 4 of 5                    |
+|   [================---]          |
+|                                  |
+|   "Tell us about your            |
+|    hemp plot"                    |
+|                                  |
+|   Plot Name                      |
+|   +----------------------------+ |
+|   | Parcelle Nord              | |
+|   +----------------------------+ |
+|                                  |
+|   Size (hectares)                |
+|   +----------------------------+ |
+|   | [-]     12.5         [+]  | |
+|   +----------------------------+ |
+|                                  |
+|   Location                       |
+|   +----------------------------+ |
+|   | [Pin] Tap to set on map   | |
+|   +----------------------------+ |
+|   [====== Map View ======]       |
+|   | [Satellite map imagery]    | |
+|   | [Draggable pin in center]  | |
+|   |                            | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+|   [====== Continue ======]       |
++----------------------------------+
+```
+
+Map Interaction:
+```
++----------------------------------+
+|         Set Plot Location        |
++----------------------------------+
+|                                  |
+|   [=============================]|
+|   [=    SATELLITE MAP         =]|
+|   [=                          =]|
+|   [=         [X]              =]|  <- Draggable pin
+|   [=       Current            =]|
+|   [=                          =]|
+|   [=                          =]|
+|   [=============================]|
+|                                  |
+|   48.2847deg N, 4.0772deg E      |
+|                                  |
+|   [ Use Current Location ]       |
+|                                  |
++----------------------------------+
+|   [====== Confirm Location =====]|
++----------------------------------+
+```
+
+Components:
+- Size stepper: +/- buttons, 0.5 ha increments, manual entry
+- Map: Satellite imagery, draggable pin, zoom controls
+- Location button: GPS permission request
+
+Validation:
+- Plot name: Required, unique per farmer
+- Size: 0.5 - 500 hectares
+- Location: Required, valid coordinates
+
+---
+
+Screen 1.6: Planting Dates
+
+Purpose: Capture planting and harvest timing
+
+Layout:
+```
++----------------------------------+
+|  [<]     Planting Dates          |
++----------------------------------+
+|                                  |
+|   Step 4 of 5 (continued)        |
+|   [================---]          |
+|                                  |
+|   "When did you plant            |
+|    this plot?"                   |
+|                                  |
+|   Planting Date                  |
+|   +----------------------------+ |
+|   | [Cal] 15 April 2026        | |
+|   +----------------------------+ |
+|                                  |
+|   Expected Harvest               |
+|   +----------------------------+ |
+|   | [Cal] 15 September 2026    | |
+|   +----------------------------+ |
+|                                  |
+|   Hemp Variety (optional)        |
+|   +----------------------------+ |
+|   | Fedora 17               [v]| |
+|   +----------------------------+ |
+|                                  |
+|   [i] Carbon capture is measured |
+|       from planting to harvest.  |
+|                                  |
++----------------------------------+
+|   [====== Continue ======]       |
++----------------------------------+
+```
+
+Components:
+- Date pickers: Native date picker, calendar icon
+- Variety dropdown: Common varieties + "Other"
+- Info box: Explains why dates matter
+
+Validation:
+- Planting date: Past or today
+- Harvest date: After planting, within 8 months
+- Auto-calculate expected carbon based on dates
+
+---
+
+Screen 1.7: Sensor Pairing
+
+Purpose: Connect IoT sensor to plot
+
+Layout (Initial):
+```
++----------------------------------+
+|  [<]      Connect Sensor         |
++----------------------------------+
+|                                  |
+|   Step 5 of 5                    |
+|   [====================]         |
+|                                  |
+|   [Illustration: Phone           |
+|    near sensor device]           |
+|                                  |
+|   "Hold your phone near          |
+|    the sensor"                   |
+|                                  |
+|   The sensor is the small        |
+|   device installed in your       |
+|   field.                         |
+|                                  |
+|   [Pulse animation: Searching]   |
+|                                  |
++----------------------------------+
+|   "Can't find sensor?"           |
+|   [ Enter code manually ]        |
++----------------------------------+
+```
+
+Layout (Manual Entry):
+```
++----------------------------------+
+|  [<]      Enter Sensor Code      |
++----------------------------------+
+|                                  |
+|   "Find the code on the          |
+|    back of your sensor"          |
+|                                  |
+|   [Illustration: Sensor back     |
+|    with code location]           |
+|                                  |
+|   +----------------------------+ |
+|   | GHL-XXXX-XXXX-XXXX         | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+|   [====== Connect ======]        |
++----------------------------------+
+```
+
+Layout (Success):
+```
++----------------------------------+
+|  [<]      Sensor Connected       |
++----------------------------------+
+|                                  |
+|                                  |
+|         [Checkmark Circle]       |
+|              Green               |
+|                                  |
+|   "Sensor connected!"            |
+|                                  |
+|   Sensor ID: GHL-2847-AXBK       |
+|   Signal: Strong                 |
+|   Battery: 100%                  |
+|                                  |
+|                                  |
++----------------------------------+
+|   [====== Continue ======]       |
++----------------------------------+
+```
+
+Components:
+- NFC detection: Automatic when screen active
+- Manual input: 16-character code with dashes
+- Success animation: Checkmark with confetti
+
+Interactions:
+- NFC tap -> Auto-detect and pair
+- Manual entry -> Validate code format
+- Success -> Vibrate, show confirmation
+
+Error Handling:
+- NFC not available: Skip directly to manual
+- Invalid code: "Code not recognized. Check and try again."
+- Sensor already paired: "This sensor is already registered to another plot."
+
+---
+
+Screen 1.8: Setup Complete
+
+Purpose: Confirm successful setup, set expectations
+
+Layout:
+```
++----------------------------------+
+|                                  |
++----------------------------------+
+|                                  |
+|                                  |
+|         [Celebration             |
+|          Illustration]           |
+|                                  |
+|   "You're all set!"              |
+|                                  |
+|   Parcelle Nord (12.5 ha)        |
+|   is now being monitored.        |
+|                                  |
+|   What happens next:             |
+|                                  |
+|   [1] Sensor collects data       |
+|       every 15 minutes           |
+|                                  |
+|   [2] We verify your carbon      |
+|       capture weekly             |
+|                                  |
+|   [3] You receive earnings       |
+|       monthly                    |
+|                                  |
+|   First earnings estimate:       |
+|   ~7 days                        |
+|                                  |
++----------------------------------+
+|   [====== Go to Dashboard ======]|
++----------------------------------+
+```
+
+Components:
+- Celebration illustration: Animated confetti
+- Timeline: Simple numbered steps with icons
+- CTA: Primary button to dashboard
+
+---
+
+5.2 Main App Screens
+
+Screen 2.1: Home Dashboard
+
+Purpose: At-a-glance status of earnings and plots
+
+Layout:
+```
++----------------------------------+
+|   [Logo]    Good morning,    [Bell]
+|             Jean-Pierre          |
++----------------------------------+
+|                                  |
+|   +----------------------------+ |
+|   | EARNINGS THIS SEASON       | |
+|   |                            | |
+|   |     EUR 1,247.50           | |  <- Large, bold
+|   |                            | |
+|   |  +EUR 85.20 this week      | |  <- Smaller, green
+|   |                            | |
+|   |  [View Details ->]         | |
+|   +----------------------------+ |
+|                                  |
+|   YOUR PLOTS                     |
+|                                  |
+|   +----------------------------+ |
+|   | [=] Parcelle Nord   [Grn]  | |
+|   |     12.5 ha                | |
+|   |     8.2 tonnes CO2         | |
+|   |     Updated 2h ago    [->] | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | [=] Parcelle Sud    [Ylw]  | |
+|   |     8.0 ha                 | |
+|   |     5.1 tonnes CO2         | |
+|   |     Updated 2h ago    [->] | |
+|   +----------------------------+ |
+|                                  |
+|   [ + Add Another Plot ]         |
+|                                  |
++----------------------------------+
+|  [Home]  [Plots]  [EUR]  [Gear] |
++----------------------------------+
+```
+
+Components:
+
+Earnings Card:
+- Background: Gradient green
+- Main amount: 32sp, bold, white
+- Weekly change: 16sp, lighter green background
+- Tap area: Entire card navigates to Earnings
+
+Plot Cards:
+- Status indicator: Colored circle (green/yellow/red)
+- Plot name: 18sp, bold
+- Size and carbon: 14sp, secondary color
+- Last update: 12sp, tertiary color
+- Arrow: Navigation affordance
+
+Status Colors:
+- Green: All systems normal
+- Yellow: Attention needed (sensor weak, verification pending)
+- Red: Action required (sensor offline, issue detected)
+
+Pull-to-Refresh:
+- Pull down to sync latest data
+- Show "Last updated: X minutes ago" after refresh
+
+---
+
+Screen 2.2: Plot Detail
+
+Purpose: Deep dive into single plot status
+
+Layout:
+```
++----------------------------------+
+|  [<]   Parcelle Nord      [Edit]|
++----------------------------------+
+|                                  |
+|   +----------------------------+ |
+|   |        [GREEN DOT]         | |
+|   |     Everything looks       | |
+|   |         good               | |
+|   +----------------------------+ |
+|                                  |
+|   CARBON CAPTURE                 |
+|   +----------------------------+ |
+|   |                            | |
+|   |   [==========>    ]        | |
+|   |   8.2 of 12.5 tonnes       | |
+|   |   (66% of season goal)     | |
+|   |                            | |
+|   +----------------------------+ |
+|                                  |
+|   SENSOR READINGS                |
+|   +----------------------------+ |
+|   | Soil Carbon    [|||||||  ] | |
+|   | 2.4%           Good        | |
+|   |                            | |
+|   | Soil Moisture  [|||||    ] | |
+|   | 34%            Normal      | |
+|   |                            | |
+|   | Last reading: 15 min ago   | |
+|   +----------------------------+ |
+|                                  |
+|   RECENT ACTIVITY                |
+|   +----------------------------+ |
+|   | Today, 14:30               | |
+|   | [Check] Sensor reading     | |
+|   |         received           | |
+|   |                            | |
+|   | Yesterday, 09:00           | |
+|   | [EUR] EUR 45.00 earned     | |
+|   |       (2.1 tonnes verified)| |
+|   |                            | |
+|   | 3 days ago                  | |
+|   | [Check] Weekly verification | |
+|   |         complete           | |
+|   +----------------------------+ |
+|   [View Full History]            |
+|                                  |
++----------------------------------+
+|  [Home]  [Plots]  [EUR]  [Gear] |
++----------------------------------+
+```
+
+Components:
+
+Status Banner:
+- Full-width card at top
+- Color matches status (green/yellow/red)
+- Simple text explanation
+
+Progress Bar:
+- Horizontal, filled based on completion
+- Shows absolute and percentage
+- Tap to see detailed breakdown
+
+Sensor Gauges:
+- Horizontal bar visualization
+- Color-coded (green = good range)
+- Last reading timestamp
+
+Activity Timeline:
+- Reverse chronological
+- Icon indicates type (check, money, alert)
+- Collapsible to last 3 items
+
+---
+
+Screen 2.3: Earnings Screen
+
+Purpose: Track all earnings and payouts
+
+Layout:
+```
++----------------------------------+
+|  [<]        Earnings             |
++----------------------------------+
+|                                  |
+|   +----------------------------+ |
+|   |   TOTAL EARNED             | |
+|   |   EUR 1,247.50             | |
+|   +----------------------------+ |
+|                                  |
+|   +------------+ +-------------+ |
+|   | This       | | Pending     | |
+|   | Season     | | Verification| |
+|   | EUR 847.50 | | EUR 120.00  | |
+|   +------------+ +-------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | Next payout: 1 March 2026  | |
+|   | Estimated: EUR 120.00      | |
+|   +----------------------------+ |
+|                                  |
+|   TRANSACTION HISTORY            |
+|                                  |
+|   February 2026                  |
+|   +----------------------------+ |
+|   | 15 Feb  Bank Transfer      | |
+|   |         EUR 245.00    [->] | |
+|   |         [Paid checkmark]   | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | 8 Feb   Verification       | |
+|   |         EUR 85.20     [->] | |
+|   |         [Pending clock]    | |
+|   +----------------------------+ |
+|                                  |
+|   January 2026                   |
+|   +----------------------------+ |
+|   | 15 Jan  Bank Transfer      | |
+|   |         EUR 198.00    [->] | |
+|   |         [Paid checkmark]   | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+|  [Home]  [Plots]  [EUR]  [Gear] |
++----------------------------------+
+```
+
+Components:
+
+Summary Cards:
+- Grid layout: 2 columns
+- Tap to filter transaction list
+
+Next Payout:
+- Highlighted card
+- Date and estimated amount
+- Tap for payout settings
+
+Transaction List:
+- Grouped by month
+- Status icons: Checkmark (paid), Clock (pending), Alert (issue)
+- Tap for detail
+
+---
+
+Screen 2.4: Transaction Detail
+
+Purpose: Show breakdown of single transaction
+
+Layout:
+```
++----------------------------------+
+|  [<]    Transaction Detail       |
++----------------------------------+
+|                                  |
+|   +----------------------------+ |
+|   |    [Checkmark - Green]     | |
+|   |                            | |
+|   |    EUR 245.00              | |
+|   |    Paid                    | |
+|   +----------------------------+ |
+|                                  |
+|   DETAILS                        |
+|                                  |
+|   Date            15 Feb 2026    |
+|   --------------------------------
+|   Type            Bank Transfer  |
+|   --------------------------------
+|   Account         4567       |
+|   --------------------------------
+|   Reference       GHL-2026-0215  |
+|   --------------------------------
+|                                  |
+|   BREAKDOWN                      |
+|                                  |
+|   Parcelle Nord                  |
+|   2.8 tonnes x EUR 15.00         |
+|                    EUR 42.00     |
+|   --------------------------------
+|   Parcelle Sud                   |
+|   1.9 tonnes x EUR 15.00         |
+|                    EUR 28.50     |
+|   --------------------------------
+|   Your share (85%)               |
+|                    EUR 59.93     |
+|   --------------------------------
+|                                  |
+|   [Download Receipt]             |
+|                                  |
++----------------------------------+
+```
+
+Components:
+- Status badge: Large, colored icon
+- Detail rows: Label-value pairs
+- Breakdown: Per-plot calculation
+- Receipt download: PDF generation
+
+---
+
+Screen 2.5: Verification Status
+
+Purpose: Show current verification progress
+
+Layout:
+```
++----------------------------------+
+|  [<]    Verification Status      |
++----------------------------------+
+|                                  |
+|   +----------------------------+ |
+|   |   CURRENT VERIFICATION     | |
+|   |   Parcelle Nord            | |
+|   |   Week of 10-16 Feb        | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   |                            | |
+|   | [1] Sensor Data       [OK] | |
+|   |     Collected              | |
+|   |     ---------------------- | |
+|   | [2] Satellite         [OK] | |
+|   |     Imagery Received       | |
+|   |     ---------------------- | |
+|   | [3] Verification    [....] | |
+|   |     Processing             | |
+|   |     ---------------------- | |
+|   | [4] Credits           [ ]  | |
+|   |     Issued (pending)       | |
+|   |                            | |
+|   +----------------------------+ |
+|                                  |
+|   "Your carbon capture is being  |
+|    verified. This usually takes  |
+|    24-48 hours."                 |
+|                                  |
+|   PREVIOUS VERIFICATIONS         |
+|   +----------------------------+ |
+|   | Week of 3-9 Feb            | |
+|   | 2.1 tonnes verified   [->] | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | Week of 27 Jan - 2 Feb     | |
+|   | 1.9 tonnes verified   [->] | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+```
+
+Components:
+
+Progress Steps:
+- Vertical stepper
+- Icons: Checkmark (complete), Spinner (in progress), Circle (pending)
+- Explanation text for current step
+
+Previous Verifications:
+- List of past weeks
+- Show tonnes verified
+- Tap for detail
+
+---
+
+Screen 2.6: Settings
+
+Purpose: App configuration and account management
+
+Layout:
+```
++----------------------------------+
+|  [<]        Settings             |
++----------------------------------+
+|                                  |
+|   ACCOUNT                        |
+|   +----------------------------+ |
+|   | [Avatar] Jean-Pierre       | |
+|   |          Dubois       [->] | |
+|   |          Edit Profile      | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | [Bank] Bank Account   [->] | |
+|   |        4567            | |
+|   +----------------------------+ |
+|                                  |
+|   PREFERENCES                    |
+|   +----------------------------+ |
+|   | [Bell] Notifications  [->] | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | [Globe] Language      [->] | |
+|   |         Francais           | |
+|   +----------------------------+ |
+|                                  |
+|   SUPPORT                        |
+|   +----------------------------+ |
+|   | [?] Help & FAQ        [->] | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | [Phone] Contact Us    [->] | |
+|   |         +33 X XX XX XX     | |
+|   +----------------------------+ |
+|                                  |
+|   ABOUT                          |
+|   +----------------------------+ |
+|   | [i] About GHL         [->] | |
+|   |     Version 1.0.0          | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | [Doc] Terms & Privacy [->] | |
+|   +----------------------------+ |
+|                                  |
+|   [Log Out]                      |
+|                                  |
++----------------------------------+
+```
+
+Components:
+- Section headers: Uppercase, 12sp, secondary color
+- List items: 56px height, icon + label + value
+- Log out: Destructive style (red text)
+
+---
+
+Screen 2.7: Notification Preferences
+
+Purpose: Control how alerts are received
+
+Layout:
+```
++----------------------------------+
+|  [<]     Notifications           |
++----------------------------------+
+|                                  |
+|   "Choose how you want to        |
+|    receive updates"              |
+|                                  |
+|   PUSH NOTIFICATIONS             |
+|   +----------------------------+ |
+|   | Earnings updates     [ON ] | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | Verification complete[ON ] | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | Sensor alerts        [ON ] | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | Weekly summary       [OFF] | |
+|   +----------------------------+ |
+|                                  |
+|   SMS NOTIFICATIONS              |
+|   +----------------------------+ |
+|   | Enable SMS backup    [ON ] | |
+|   |                            | |
+|   | Important alerts will be   | |
+|   | sent via SMS if push       | |
+|   | notifications fail.        | |
+|   +----------------------------+ |
+|                                  |
+|   SMS Number: +33 6 12 34 56 78  |
+|   [Change Number]                |
+|                                  |
++----------------------------------+
+```
+
+Components:
+- Toggle switches: iOS-style, 51x31px
+- Info text: Explains SMS fallback
+- Granular control per notification type
+
+---
+
+Screen 2.8: Help & Support
+
+Purpose: Self-service help and contact options
+
+Layout:
+```
++----------------------------------+
+|  [<]     Help & Support          |
++----------------------------------+
+|                                  |
+|   [Search FAQs...]               |
+|                                  |
+|   COMMON QUESTIONS               |
+|                                  |
+|   +----------------------------+ |
+|   | How do I add another   [v] | |
+|   | plot?                      | |
+|   |----------------------------| |
+|   | Tap the "+" button on the  | |
+|   | Home screen and follow...  | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | What do the colors     [>] | |
+|   | mean?                      | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | When do I get paid?    [>] | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | My sensor shows an     [>] | |
+|   | error                      | |
+|   +----------------------------+ |
+|                                  |
+|   CONTACT US                     |
+|   +----------------------------+ |
+|   | [Chat] Start a Chat   [->] | |
+|   | Response in < 24 hours     | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | [Phone] Call Support  [->] | |
+|   | +33 3 25 92 31 92          | |
+|   | Mon-Fri 9am-5pm CET        | |
+|   +----------------------------+ |
+|   +----------------------------+ |
+|   | [Email] Email Us      [->] | |
+|   | support@ghl.earth          | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+```
+
+Components:
+- Search bar: Filter FAQs
+- Accordion: Expandable FAQ items
+- Contact options: Multiple channels
+
+---
+
+5.3 Alert & Error Screens
+
+Screen 3.1: Sensor Offline Alert
+
+Purpose: Guide farmer through sensor troubleshooting
+
+Layout:
+```
++----------------------------------+
+|  [X]     Sensor Alert            |
++----------------------------------+
+|                                  |
+|         [Warning Icon]           |
+|           Yellow                 |
+|                                  |
+|   "Sensor offline"               |
+|                                  |
+|   Parcelle Nord sensor           |
+|   hasn't reported in 24 hours.   |
+|                                  |
+|   TRY THESE STEPS:               |
+|                                  |
+|   [1] Check battery              |
+|       The sensor uses 2 AA       |
+|       batteries. Replace if      |
+|       needed.                    |
+|                                  |
+|   [2] Check for damage           |
+|       Make sure sensor hasn't    |
+|       been knocked over or       |
+|       damaged.                   |
+|                                  |
+|   [3] Move phone closer          |
+|       Try reconnecting from      |
+|       within 2 meters.           |
+|                                  |
+|   [ Try Reconnecting ]           |
+|                                  |
+|   [Still not working? Contact    |
+|    Support]                      |
+|                                  |
++----------------------------------+
+```
+
+Components:
+- Warning icon: Yellow/amber
+- Numbered steps: Clear troubleshooting
+- Action buttons: Try fix, escalate to support
+
+---
+
+Screen 3.2: Offline Mode Banner
+
+Purpose: Indicate offline state, ensure farmer knows data may be stale
+
+Layout:
+```
++----------------------------------+
+|  [!] You're offline              |
+|      Last updated 2 hours ago    |
++----------------------------------+
+|                                  |
+|   [Regular dashboard content     |
+|    with slightly muted colors]   |
+|                                  |
+|   +----------------------------+ |
+|   | [!] Some actions are       | |
+|   | unavailable offline.       | |
+|   | They'll complete when you  | |
+|   | reconnect.                 | |
+|   +----------------------------+ |
+|                                  |
++----------------------------------+
+```
+
+Components:
+- Sticky banner: Persists at top
+- Muted UI: Slight opacity reduction
+- Info card: Explains limitations
+
+Offline Capabilities:
+- View cached dashboard data
+- View cached earnings history
+- View plot details (last cached)
+- Queue: Report issue (sends when online)
+
+Offline Limitations:
+- Cannot add new plot
+- Cannot pair new sensor
+- Cannot change bank details
+- Data may be stale
+
+---
+
+6. User Flows
+
+6.1 First-Time Onboarding Flow
+
+```
+[Install App]
+     |
+     v
+[Welcome Screen]
+     |
+     v
+[Phone Verification] --fail--> [Retry / Support]
+     |
+     | success
+     v
+[Farmer Profile]
+     |
+     v
+[Bank Details] --skip--> [Plot Registration]
+     |                          |
+     | filled                   |
+     v                          |
+[Plot Registration] <-----------+
+     |
+     v
+[Planting Dates]
+     |
+     v
+[Sensor Pairing] --no sensor--> [Skip / Contact Support]
+     |                                   |
+     | paired                            |
+     v                                   |
+[Setup Complete] <-----------------------+
+     |
+     v
+[Home Dashboard]
+```
+
+Time to Complete: 5-8 minutes
+
+---
+
+6.2 Check Earnings Flow
+
+```
+[Home Dashboard]
+     |
+     | tap earnings card
+     v
+[Earnings Screen]
+     |
+     | tap transaction
+     v
+[Transaction Detail]
+     |
+     | tap download receipt
+     v
+[PDF Generated / Share Sheet]
+```
+
+Taps Required: 2-3
+
+---
+
+6.3 Respond to Sensor Alert Flow
+
+```
+[Push Notification: Sensor Offline]
+     |
+     | tap notification
+     v
+[Sensor Alert Screen]
+     |
+     | follow troubleshooting
+     v
+[Try Reconnecting]
+     |
+     +--success---> [Success Message] --> [Plot Detail]
+     |
+     +--fail---> [Contact Support Option]
+                       |
+                       v
+                 [Support Chat / Call]
+```
+
+Target Resolution: < 5 minutes self-service
+
+---
+
+6.4 Add New Plot Flow
+
+```
+[Home Dashboard]
+     |
+     | tap "Add Plot"
+     v
+[Plot Registration]
+     |
+     v
+[Planting Dates]
+     |
+     v
+[Sensor Pairing] --no sensor yet--> [Request Sensor]
+     |                                     |
+     | paired                              |
+     v                                     v
+[Confirmation] <---sensor arrives--- [Awaiting Sensor]
+     |
+     v
+[Home Dashboard with New Plot]
+```
+
+---
+
+6.5 View Verification Status Flow
+
+```
+[Plot Detail]
+     |
+     | tap verification section
+     v
+[Verification Status]
+     |
+     | tap previous verification
+     v
+[Verification Detail]
+     |
+     | shows: dates, data sources,
+     | tonnes verified, earnings
+```
+
+---
+
+7. Component Library
+
+7.1 Buttons
+
+Primary Button
+```
++------------------------------+
+|         BUTTON TEXT          |  Height: 56px
++------------------------------+  Radius: 8px
+                                  Background: Primary Green (#2E7D32)
+                                  Text: White, 16sp, Bold
+                                  Touch: Entire button area
+                                  States: Default, Pressed (darken 10%), Disabled (50% opacity)
+```
+
+Secondary Button
+```
++------------------------------+
+|         BUTTON TEXT          |  Height: 56px
++------------------------------+  Radius: 8px
+                                  Background: White
+                                  Border: 2px Primary Green
+                                  Text: Primary Green, 16sp, Bold
+```
+
+Text Button
+```
+    BUTTON TEXT                   Height: 48px (touch target)
+                                  Text: Primary Green, 16sp
+                                  Underline on press
+
+```
+
+Destructive Button
+```
++------------------------------+
+|           LOG OUT            |  Height: 56px
++------------------------------+  Radius: 8px
+                                  Background: White
+                                  Text: Error Red (#D32F2F), 16sp
+```
+
+---
+
+7.2 Input Fields
+
+Text Input
+```
+Label Text
++------------------------------+
+| Placeholder or value         |  Height: 56px
++------------------------------+  Radius: 8px
+                                  Border: 1px Gray (Default), 2px Primary (Focus), 2px Red (Error)
+                                  Text: 16sp
+                                  Label: 14sp, above field
+```
+
+Error State
+```
+Label Text
++------------------------------+
+| Invalid value                |  Border: 2px Error Red
++------------------------------+
+Error message here               Text: 14sp, Error Red
+```
+
+Dropdown
+```
+Label Text
++------------------------------+
+| Selected value           [v] |  Height: 56px
++------------------------------+  Arrow: 24px, right-aligned
+                                  Tap: Opens bottom sheet picker
+```
+
+---
+
+7.3 Cards
+
+Earnings Summary Card
+```
++----------------------------------+
+|  EARNINGS THIS SEASON            |  Padding: 16px
+|                                  |  Background: Gradient Green
+|       EUR 1,247.50               |  Amount: 32sp, Bold, White
+|                                  |  Label: 14sp, White 80%
+|   +EUR 85.20 this week           |  Change: 14sp, Light Green BG
+|                                  |
+|   View Details ->                |  Link: 14sp, White, Underline
++----------------------------------+
+Radius: 12px
+Shadow: 0 2px 8px rgba(0,0,0,0.1)
+```
+
+Plot Card
+```
++----------------------------------+
+| [=] Plot Name           [Green]  |  Height: 88px
+|     12.5 ha                      |  Padding: 16px
+|     8.2 tonnes CO2               |  Status dot: 12px
+|     Updated 2h ago          [->] |  Tap: Navigate to detail
++----------------------------------+
+Radius: 8px
+Border: 1px Gray (#E0E0E0)
+```
+
+Info Card
+```
++----------------------------------+
+| [i] Information text here.       |  Padding: 12px
+|     Can span multiple lines.     |  Background: Light Blue (#E3F2FD)
++----------------------------------+  Icon: 20px, Blue
+Radius: 8px
+```
+
+Alert Card
+```
++----------------------------------+
+| [!] Warning text here.           |  Padding: 12px
+|     Action may be required.      |  Background: Light Yellow (#FFF9C4)
++----------------------------------+  Icon: 20px, Amber
+Radius: 8px
+```
+
+---
+
+7.4 Status Indicators
+
+Status Dot
+```
+[Green]  All good - no action needed
+         Color: #4CAF50, 12px diameter
+
+[Yellow] Attention - review recommended
+         Color: #FFC107, 12px diameter
+
+[Red]    Action required - issue detected
+         Color: #F44336, 12px diameter
+```
+
+Progress Bar
+```
+[============>         ]
+Filled: Primary Green
+Empty: Gray (#E0E0E0)
+Height: 8px
+Radius: 4px
+```
+
+Gauge/Meter
+```
+[||||||||        ]
+Filled: Color based on value range
+  Good (green), Warning (yellow), Alert (red)
+Height: 12px
+Radius: 6px
+```
+
+---
+
+7.5 Navigation
+
+Bottom Tab Bar
+```
++--------+--------+--------+--------+
+| [Home] | [Plot] | [EUR]  | [Gear] |
+| Home   | Plots  |Earnings|Settings|
++--------+--------+--------+--------+
+
+Height: 64px (+ safe area)
+Icons: 24px, centered
+Labels: 12sp, below icon
+Active: Primary Green, Bold
+Inactive: Gray (#757575)
+```
+
+Header/App Bar
+```
++----------------------------------+
+| [<]     Screen Title      [...]  |
++----------------------------------+
+Height: 56px
+Back: 24px icon, 48px touch
+Title: 18sp, Bold, Centered
+Actions: Right-aligned, 48px touch each
+```
+
+---
+
+7.6 Lists
+
+List Item - Standard
+```
++----------------------------------+
+| [Icon] Primary Text         [->] |  Height: 56px
+|        Secondary text            |  Padding: 16px horizontal
++----------------------------------+
+Icon: 24px, left
+Primary: 16sp
+Secondary: 14sp, Gray
+Arrow: 24px, right (if navigable)
+Divider: 1px, full width
+```
+
+List Item - Transaction
+```
++----------------------------------+
+| 15 Feb   Bank Transfer           |  Height: 72px
+|          EUR 245.00        [->]  |  
+|          [Check] Paid            |  Status icon: 16px
++----------------------------------+
+```
+
+---
+
+7.7 Modals & Sheets
+
+Bottom Sheet
+```
++----------------------------------+
+|          [Drag Handle]           |  Handle: 32x4px, centered
++----------------------------------+
+|                                  |
+|          Sheet Content           |  Max height: 80% screen
+|                                  |  Background: White
+|                                  |  Radius: 16px top corners
+|                                  |  Backdrop: Black 50%
++----------------------------------+
+```
+
+Dialog
+```
+       +------------------------+
+       |        Title           |  Width: 280px
+       |                        |  Padding: 24px
+       |   Message text here.   |  Radius: 8px
+       |                        |  Shadow: Elevation 24
+       | [Cancel]  [Confirm]    |
+       +------------------------+
+```
+
+---
+
+7.8 Loading States
+
+Skeleton Screen
+```
++----------------------------------+
+|   [================]             |  Animated shimmer
+|   [====]                         |  Light gray (#F5F5F5)
+|   +----------------------------+ |  Replaces content shape
+|   | [==================]       | |
+|   | [========]                 | |
+|   | [==============]           | |
+|   +----------------------------+ |
++----------------------------------+
+```
+
+Inline Spinner
+```
+   [Spinning Circle]   Loading...
+   20px diameter, Primary Green
+```
+
+---
+
+8. SMS Fallback System
+
+8.1 SMS Message Templates
+
+Earnings Notification
+```
+GHL: Vous avez gagne EUR 45.20 cette semaine. Total saison: EUR 1,247.50. 
+Prochaine virement: 1er mars. Repondez AIDE pour assistance.
+
+[English]
+GHL: You earned EUR 45.20 this week. Season total: EUR 1,247.50. 
+Next payout: March 1. Reply HELP for support.
+```
+
+Verification Complete
+```
+GHL: 2.1 tonnes de CO2 verifiees pour Parcelle Nord. 
+EUR 31.50 sera credite. Voir details: ghl.earth/v/ABC123
+
+[English]
+GHL: 2.1 tonnes CO2 verified for Plot North. 
+EUR 31.50 will be credited. View details: ghl.earth/v/ABC123
+```
+
+Payout Sent
+```
+GHL: EUR 245.00 envoye a votre compte bancaire 4567.
+Reference: GHL-2026-0215. Questions? +33 3 25 92 31 92
+
+[English]
+GHL: EUR 245.00 sent to your bank account 4567.
+Reference: GHL-2026-0215. Questions? +33 3 25 92 31 92
+```
+
+Sensor Alert
+```
+GHL: Alerte capteur Parcelle Nord - hors ligne depuis 24h. 
+Verifiez les piles ou appelez +33 3 25 92 31 92 pour aide.
+
+[English]
+GHL: Sensor alert Plot North - offline for 24h. 
+Check batteries or call +33 3 25 92 31 92 for help.
+```
+
+Action Required
+```
+GHL: Action requise: Confirmez la date de recolte pour Parcelle Nord. 
+Appelez +33 3 25 92 31 92 ou visitez ghl.earth/confirm
+
+[English]
+GHL: Action required: Confirm harvest date for Plot North. 
+Call +33 3 25 92 31 92 or visit ghl.earth/confirm
+```
+
+Weekly Summary
+```
+GHL Resume Hebdo: 2 parcelles actives, 4.2t CO2 capturees, 
+EUR 63.00 en attente de verification. Bon travail!
+
+[English]
+GHL Weekly Summary: 2 plots active, 4.2t CO2 captured, 
+EUR 63.00 pending verification. Good work!
+```
+
+8.2 SMS Response Handling
+
+AIDE / HELP
+```
+Farmer sends: AIDE (or HELP)
+
+Response:
+GHL Support: Appelez +33 3 25 92 31 92 (Lun-Ven 9h-17h) ou 
+envoyez votre question par SMS. Nous repondrons dans 24h.
+
+[English]
+GHL Support: Call +33 3 25 92 31 92 (Mon-Fri 9am-5pm) or 
+send your question via SMS. We'll respond within 24h.
+```
+
+STOP
+```
+Farmer sends: STOP
+
+Response:
+GHL: Vous etes desinscrit des SMS. Reactivez dans l'app 
+ou envoyez START. Alertes critiques resteront actives.
+
+[English]
+GHL: You've been unsubscribed from SMS. Reactivate in app 
+or send START. Critical alerts will remain active.
+```
+
+START
+```
+Farmer sends: START
+
+Response:
+GHL: SMS reactives. Vous recevrez les alertes importantes 
+et resumes hebdomadaires.
+
+[English]
+GHL: SMS reactivated. You'll receive important alerts 
+and weekly summaries.
+```
+
+8.3 SMS Delivery Rules
+
+| Notification Type | Push | SMS Fallback | SMS-Only Users |
+|-------------------|------|--------------|----------------|
+| Earnings weekly | Yes | If push fails | Yes |
+| Verification complete | Yes | If push fails | Yes |
+| Payout sent | Yes | Always | Yes |
+| Sensor alert | Yes | If no response in 4h | Yes |
+| Action required | Yes | If no response in 24h | Yes |
+
+---
+
+9. Accessibility Guidelines
+
+9.1 Visual Accessibility
+
+Color Contrast
+- Text on backgrounds: Minimum 4.5:1 ratio (WCAG AA)
+- Large text (18sp+): Minimum 3:1 ratio
+- Interactive elements: Clearly distinguishable
+
+Color Independence
+- Never use color alone to convey meaning
+- Status indicators: Color + icon + text
+- Charts: Pattern fills in addition to colors
+
+Text Scaling
+- Support system font scaling up to 200%
+- Test layouts at maximum scale
+- Horizontal scrolling acceptable for data tables only
+
+Screen Reader Support
+- All images have contentDescription
+- Touch targets have accessibility labels
+- Reading order matches visual order
+- Headings properly marked (accessibility headers)
+
+9.2 Motor Accessibility
+
+Touch Targets
+- Minimum 48x48dp for all interactive elements
+- Spacing: 8dp minimum between targets
+- Gestures: Always provide tap alternative to swipe
+
+Input Methods
+- Support external keyboards
+- Tab order logical and complete
+- Focus indicators visible
+
+9.3 Cognitive Accessibility
+
+Simplicity
+- One idea per screen
+- Consistent navigation
+- Predictable interactions
+- Clear error recovery
+
+Timing
+- No time-limited actions
+- Animations can be disabled
+- Auto-logout with warning
+
+Memory
+- Don't require remembering info between screens
+- Provide context on every screen
+- Clear breadcrumbs/back navigation
+
+---
+
+10. Localization Notes
+
+10.1 Supported Languages (Launch)
+
+| Language | Code | Region | Notes |
+|----------|------|--------|-------|
+| French | fr-FR | France | Primary, La Chanvriere |
+| English | en-GB | UK/Intl | Fallback |
+| German | de-DE | Germany | Large market |
+| Dutch | nl-NL | Netherlands | HempFlax |
+
+10.2 Text Expansion Guidelines
+
+| Source (English) | French | German | Dutch |
+|------------------|--------|--------|-------|
+| 100% | +15-20% | +30% | +10% |
+
+Design Implications:
+- Buttons: Test with longest translation
+- Labels: Allow 2 lines if needed
+- Headers: Consider abbreviations
+
+10.3 Number Formatting
+
+| Locale | Number | Currency | Date |
+|--------|--------|----------|------|
+| fr-FR | 1 234,56 | 1 234,56 EUR | 15/02/2026 |
+| en-GB | 1,234.56 | EUR 1,234.56 | 15/02/2026 |
+| de-DE | 1.234,56 | 1.234,56 EUR | 15.02.2026 |
+| nl-NL | 1.234,56 | EUR 1.234,56 | 15-02-2026 |
+
+10.4 Cultural Considerations
+
+French
+- Formal "vous" throughout (not "tu")
+- Full month names preferred
+- Time: 24-hour format
+
+German
+- Formal "Sie" throughout
+- Compound words may be very long
+- Date format: dd.mm.yyyy
+
+Dutch
+- Formal "u" for initial contact
+- Can switch to informal after rapport
+- Direct communication style acceptable
+
+10.5 String Management
+
+- All strings externalized (no hardcoded text)
+- Use ICU MessageFormat for plurals
+- Include translator context comments
+- Right-to-left: Not required for launch languages
+
+---
+
+11. Technical Requirements
+
+11.1 Platform Specifications
+
+iOS
+- Minimum: iOS 14.0
+- Target: iOS 17.0
+- Devices: iPhone 8 and newer
+- Required: Push notifications, Camera, Location, NFC
+
+Android
+- Minimum: API 29 (Android 10)
+- Target: API 34 (Android 14)
+- Devices: Phones with 720p+ screens
+- Required: Push, Camera, Location, NFC
+
+11.2 Performance Requirements
+
+| Metric | Target | Maximum |
+|--------|--------|---------|
+| App launch (cold) | < 2s | 4s |
+| App launch (warm) | < 500ms | 1s |
+| Screen transition | < 300ms | 500ms |
+| API response display | < 1s | 3s |
+| Offline data load | < 200ms | 500ms |
+
+11.3 Offline Capabilities
+
+Data Cached Locally:
+- User profile
+- All plots and current status
+- Last 30 days of transactions
+- Sensor pairing information
+- FAQ content
+
+Queue for Sync:
+- Plot updates (dates, name)
+- Issue reports
+- Settings changes
+
+Not Available Offline:
+- New plot registration (requires server validation)
+- Sensor pairing (requires server handshake)
+- Bank detail changes (security requirement)
+
+11.4 Data Synchronization
+
+- Background sync: Every 15 minutes when online
+- Foreground sync: On app open, pull-to-refresh
+- Conflict resolution: Server wins (last write)
+- Sync indicator: Show "Syncing..." in header
+
+11.5 Security Requirements
+
+- All network traffic: TLS 1.3
+- Local storage: Encrypted (iOS Keychain, Android EncryptedSharedPreferences)
+- Session: JWT with 24h expiry, refresh token with 30d expiry
+- Biometric: Optional for app unlock
+- PIN: Optional fallback if biometric unavailable
+
+11.6 Analytics Events
+
+| Event | Parameters | Purpose |
+|-------|------------|---------|
+| onboarding_start | - | Funnel tracking |
+| onboarding_step_complete | step_number, step_name | Drop-off analysis |
+| onboarding_complete | duration_seconds | Success rate |
+| plot_added | plot_size, has_sensor | Feature usage |
+| earnings_viewed | - | Engagement |
+| transaction_viewed | transaction_type | Interest tracking |
+| sensor_alert_opened | alert_type | Support needs |
+| support_contacted | method (chat/call/email) | Support volume |
+| error_occurred | error_type, screen | Bug tracking |
+
+---
+
+12. Appendix: ASCII Wireframe Reference
+
+A. Full Home Screen
+```
++----------------------------------+
+|   [Logo]  Bonjour,          [!]  |
+|           Jean-Pierre            |
++----------------------------------+
+|                                  |
+|   +----------------------------+ |
+|   | GAINS CETTE SAISON         | |
+|   |                            | |
+|   |     EUR 1 247,50           | |
+|   |                            | |
+|   |  +EUR 85,20 cette semaine  | |
+|   |                            | |
+|   |  [Voir Details ->]         | |
+|   +----------------------------+ |
+|                                  |
+|   VOS PARCELLES                  |
+|                                  |
+|   +----------------------------+ |
+|   | [=] Parcelle Nord   [Vert] | |
+|   |     12,5 ha                | |
+|   |     8,2 tonnes CO2         | |
+|   |     Mis a jour il y a 2h   | |
+|   +----------------------------+ |
+|                                  |
+|   +----------------------------+ |
+|   | [=] Parcelle Sud   [Jaune] | |
+|   |     8,0 ha                 | |
+|   |     5,1 tonnes CO2         | |
+|   |     Mis a jour il y a 2h   | |
+|   +----------------------------+ |
+|                                  |
+|   [ + Ajouter une Parcelle ]     |
+|                                  |
++----------------------------------+
+|[Accueil][Parcelles][EUR][Params] |
++----------------------------------+
+```
+
+B. Color Palette Reference
+
+```
+Primary Green:    #2E7D32  (rgb: 46, 125, 50)
+Primary Light:    #60AD5E  (rgb: 96, 173, 94)
+Primary Dark:     #005005  (rgb: 0, 80, 5)
+
+Accent Gold:      #FFC107  (rgb: 255, 193, 7)
+
+Error Red:        #D32F2F  (rgb: 211, 47, 47)
+Warning Amber:    #FFA000  (rgb: 255, 160, 0)
+Success Green:    #388E3C  (rgb: 56, 142, 60)
+
+Text Primary:     #212121  (rgb: 33, 33, 33)
+Text Secondary:   #757575  (rgb: 117, 117, 117)
+Text Disabled:    #BDBDBD  (rgb: 189, 189, 189)
+
+Background:       #FFFFFF  (rgb: 255, 255, 255)
+Surface:          #F5F5F5  (rgb: 245, 245, 245)
+Divider:          #E0E0E0  (rgb: 224, 224, 224)
+```
+
+C. Typography Scale
+
+```
+Display:      32sp / Bold    - Main earnings amount
+Headline:     24sp / Bold    - Screen titles
+Title:        20sp / Medium  - Section headers
+Body Large:   18sp / Regular - Plot names, emphasis
+Body:         16sp / Regular - Primary content
+Body Small:   14sp / Regular - Secondary content
+Caption:      12sp / Regular - Timestamps, labels
+```
+
+---
+
+Document Version: 1.0
+Last Updated: February 2026
+Author: GHL Product Team
+
+---
+
+*This specification is intended for UI designers and mobile developers. It provides complete information to build high-fidelity mockups and functional implementations.*
+
